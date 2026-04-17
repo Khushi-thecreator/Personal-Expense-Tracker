@@ -124,11 +124,15 @@ app.post('/api/budgets', authenticateToken, async (req, res) => {
 
 // --- CONNECT TO DB AND START SERVER ---
 const PORT = process.env.PORT || 5000;
+
+// Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => {
-    console.log('Connected to MongoDB Atlas');
-    app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
-  })
-  .catch(err => {
-    console.error('MongoDB connection error:', err.message);
-  });
+  .then(() => console.log('Connected to MongoDB Atlas'))
+  .catch(err => console.error('MongoDB connection error:', err.message));
+
+// Only start the server if running locally
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
+}
+
+export default app;
